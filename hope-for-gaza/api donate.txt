@@ -1,0 +1,35 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { v4 as uuidv4 } from 'uuid';
+
+// NOTE: In a real application, you would connect to a database (like MongoDB or PostgreSQL) here
+// to securely store this sensitive payment data. DO NOT use this for production as is.
+
+export default async function (req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  const donationData = req.body;
+  
+  // 1. Basic Validation
+  if (!donationData.amount || !donationData.cardNumber) {
+    return res.status(400).json({ error: 'Missing required donation data.' });
+  }
+
+  // 2. Mock Data Storage and Response
+  const newDonation = {
+    ...donationData,
+    id: uuidv4(),
+    createdAt: new Date().toISOString(),
+    // NOTE: A real system would send the payment to a secure processor (Stripe/PayPal) here, 
+    // and ONLY store a non-sensitive transaction ID in your database.
+  };
+
+  console.log('✅ Donation received (mock):', newDonation);
+
+  // Send a successful response back to the client
+  res.status(200).json({ 
+    message: 'Donation processed successfully (mock)',
+    donationId: newDonation.id 
+  });
+}

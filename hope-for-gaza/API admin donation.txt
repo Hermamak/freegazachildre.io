@@ -1,0 +1,29 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+// NOTE: This array simulates a database. In a real app, you would query your DB here.
+const mockDonations = [
+  {
+    id: "a1", name: "Mock Donor 1", email: "d1@example.com", amount: "50",
+    cardNumber: "4111222233334444", expiryDate: "12/25", cvv: "123", country: "us",
+    createdAt: new Date(Date.now() - 86400000).toISOString() // Yesterday
+  },
+  {
+    id: "b2", name: "Mock Donor 2", email: "d2@example.com", amount: "100",
+    cardNumber: "5555666677778888", expiryDate: "10/24", cvv: "456", country: "uk",
+    createdAt: new Date().toISOString() // Today
+  },
+];
+
+export default async function (req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  // In a real app, you would add authentication and authorization logic here
+  // to ensure only admins can access this route.
+
+  console.log('📊 Admin dashboard accessed (mock)');
+
+  // Send the mock data to the frontend
+  res.status(200).json(mockDonations);
+}
